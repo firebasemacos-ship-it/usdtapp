@@ -73,7 +73,8 @@ export default function AdminLoginPage() {
 
         // Redirect based on selected system card
         if (selectedSystem === 'sales') {
-          router.push("/admin/instant-sales");
+          const salesUrl = process.env.NEXT_PUBLIC_SALES_SYSTEM_URL || 'http://localhost:9005';
+          window.location.href = `${salesUrl}/admin/dashboard?sso=admin`;
         } else {
           router.push("/admin/dashboard");
         }

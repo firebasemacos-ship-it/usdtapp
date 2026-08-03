@@ -243,12 +243,15 @@ export default function AdminLayout({
             </Button>
           </div>
 
-          {/* System Switcher Button to TrendPOS (Unified Direct Sales App) */}
+          {/* System Switcher Button to TrendPOS (Standalone Sales App) */}
           <div className="p-3 bg-slate-50 dark:bg-slate-950/60 border-b border-slate-100 dark:border-slate-800">
             <Button
               variant="outline"
               size="sm"
-              onClick={() => router.push('/admin/instant-sales')}
+              onClick={() => {
+                const salesUrl = process.env.NEXT_PUBLIC_SALES_SYSTEM_URL || 'http://localhost:9005';
+                window.location.href = salesUrl;
+              }}
               className="w-full h-10 justify-between bg-slate-900 border-slate-700 text-teal-400 hover:text-white hover:bg-slate-800 rounded-xl text-xs font-bold shadow-xs cursor-pointer"
             >
               <span className="flex items-center gap-1.5">
