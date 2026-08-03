@@ -248,7 +248,10 @@ export default function AdminLayout({
               variant="outline"
               size="sm"
               onClick={() => {
-                const salesUrl = process.env.NEXT_PUBLIC_SALES_SYSTEM_URL || 'http://localhost:9005';
+                const salesUrl = process.env.NEXT_PUBLIC_SALES_SYSTEM_URL || 
+                  (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app') 
+                    ? 'https://usdtapp-y4at.vercel.app' 
+                    : 'http://localhost:9005');
                 window.location.href = salesUrl;
               }}
               className="w-full h-10 justify-between bg-slate-900 border-slate-700 text-teal-400 hover:text-white hover:bg-slate-800 rounded-xl text-xs font-bold shadow-xs cursor-pointer"
