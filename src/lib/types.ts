@@ -114,8 +114,8 @@ export type ExternalDebt = {
   creditorId: string;
   creditorName: string;
   amount: number;
-  currency: 'LYD' | 'USD';
-  type: 'borrow' | 'repay';
+  currency?: 'LYD' | 'USD';
+  type?: 'borrow' | 'repay' | string;
   date: string;
   description?: string;
   notes?: string;
