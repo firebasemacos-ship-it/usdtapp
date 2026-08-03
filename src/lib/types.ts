@@ -118,6 +118,8 @@ export type ExternalDebt = {
   type: 'borrow' | 'repay';
   date: string;
   description?: string;
+  notes?: string;
+  status?: string;
   created_at?: string;
 };
 
