@@ -247,7 +247,10 @@ export default function AdminLayout({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => { window.location.href = 'http://localhost:9005'; }}
+              onClick={() => { 
+                const salesUrl = process.env.NEXT_PUBLIC_SALES_SYSTEM_URL || 'http://localhost:9005';
+                window.location.href = salesUrl; 
+              }}
               className="w-full h-10 justify-between bg-slate-900 border-slate-700 text-teal-400 hover:text-white hover:bg-slate-800 rounded-xl text-xs font-bold shadow-xs"
             >
               <span className="flex items-center gap-1.5">

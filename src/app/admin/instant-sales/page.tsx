@@ -4,7 +4,8 @@ import { useEffect } from 'react';
 
 export default function RedirectToTrendPOS() {
   useEffect(() => {
-    window.location.href = 'http://localhost:9005';
+    const salesUrl = process.env.NEXT_PUBLIC_SALES_SYSTEM_URL || 'http://localhost:9005';
+    window.location.href = salesUrl;
   }, []);
 
   return (
