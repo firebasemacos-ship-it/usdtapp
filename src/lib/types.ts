@@ -48,8 +48,10 @@ export type Representative = {
 export type Order = {
   id: string;
   orderNumber: string;
+  invoiceNumber?: string;
   userId: string;
   userName: string;
+  customerName?: string;
   userPhone: string;
   description: string;
   operationDate: string;
