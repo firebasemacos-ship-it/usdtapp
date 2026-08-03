@@ -54,6 +54,7 @@ export type Order = {
   customerName?: string;
   userPhone: string;
   description: string;
+  itemDescription?: string;
   operationDate: string;
   purchasePriceUSD: number;
   sellingPriceLYD: number;
