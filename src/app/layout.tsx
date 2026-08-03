@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cairo } from 'next/font/google';
+import { Tajawal, Cairo } from 'next/font/google';
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -27,9 +27,6 @@ if (typeof window === 'undefined') {
     console.error('Failed to polyfill localStorage:', e);
   }
 }
-
-
-import { Tajawal, Cairo } from 'next/font/google';
 
 const tajawal = Tajawal({
   subsets: ['arabic'],
