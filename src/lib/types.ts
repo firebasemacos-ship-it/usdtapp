@@ -91,6 +91,8 @@ export type Expense = {
   created_at?: string;
 };
 
+export type DepositStatus = 'pending' | 'completed' | 'cancelled' | string;
+
 export type Deposit = {
   id: string;
   customerName: string;
@@ -98,6 +100,9 @@ export type Deposit = {
   amount: number;
   date: string;
   notes?: string;
+  status?: DepositStatus;
+  representativeId?: string;
+  representativeName?: string;
   created_at?: string;
 };
 
