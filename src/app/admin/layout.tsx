@@ -229,7 +229,7 @@ export default function AdminLayout({
                   USD STORE
                 </h1>
                 <p className="text-[11px] font-semibold text-[#1aa0a1]">
-                  نظام الشحن والخدمات
+                  {pathname === '/admin/instant-sales' ? 'نظام المبيعات المباشرة (TrendPOS)' : 'نظام الشحن والخدمات'}
                 </p>
               </div>
             </Link>
@@ -243,20 +243,35 @@ export default function AdminLayout({
             </Button>
           </div>
 
-          {/* System Switcher Button to TrendPOS (Unified Direct Sales App) */}
+          {/* System Switcher Button */}
           <div className="p-3 bg-slate-50 dark:bg-slate-950/60 border-b border-slate-100 dark:border-slate-800">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push('/admin/instant-sales')}
-              className="w-full h-10 justify-between bg-slate-900 border-slate-700 text-teal-400 hover:text-white hover:bg-slate-800 rounded-xl text-xs font-bold shadow-xs cursor-pointer"
-            >
-              <span className="flex items-center gap-1.5">
-                <Zap className="w-3.5 h-3.5 text-amber-400" />
-                <span>الانتقال إلى نظام المبيعات (TrendPOS)</span>
-              </span>
-              <ArrowRightLeft className="w-3.5 h-3.5" />
-            </Button>
+            {pathname === '/admin/instant-sales' ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push('/admin/dashboard')}
+                className="w-full h-10 justify-between bg-slate-900 border-slate-700 text-amber-400 hover:text-white hover:bg-slate-800 rounded-xl text-xs font-bold shadow-xs cursor-pointer"
+              >
+                <span className="flex items-center gap-1.5">
+                  <Home className="w-3.5 h-3.5 text-teal-400" />
+                  <span>العودة إلى نظام الشحن والخدمات</span>
+                </span>
+                <ArrowRightLeft className="w-3.5 h-3.5" />
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push('/admin/instant-sales')}
+                className="w-full h-10 justify-between bg-slate-900 border-slate-700 text-teal-400 hover:text-white hover:bg-slate-800 rounded-xl text-xs font-bold shadow-xs cursor-pointer"
+              >
+                <span className="flex items-center gap-1.5">
+                  <Zap className="w-3.5 h-3.5 text-amber-400" />
+                  <span>الانتقال إلى نظام المبيعات (TrendPOS)</span>
+                </span>
+                <ArrowRightLeft className="w-3.5 h-3.5" />
+              </Button>
+            )}
           </div>
 
           {/* Navigation List */}
