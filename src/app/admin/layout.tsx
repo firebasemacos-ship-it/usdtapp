@@ -48,6 +48,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 // Shipping System Navigation Items (نظام الشحن والخدمات)
 const navItems = [
   { href: '/admin/dashboard', icon: Home, label: 'لوحة التحكم الرئيسيّة', permissionId: 'dashboard' },
+  { href: '/admin/instant-sales', icon: Zap, label: 'نظام المبيعات المباشرة (POS)', permissionId: 'instant_sales' },
   { href: '/admin/users', icon: Users, label: 'إدارة المستخدمين والزبائن', permissionId: 'users' },
   { href: '/admin/orders', icon: ShoppingCart, label: 'إدارة الطلبيات والفواتير', permissionId: 'orders' },
   { href: '/admin/shipping-label', icon: Printer, label: 'إنشاء بوليصة شحن', permissionId: 'shipping_label' },
@@ -242,16 +243,13 @@ export default function AdminLayout({
             </Button>
           </div>
 
-          {/* System Switcher Button to TrendPOS (Original Sales App on 9005) */}
+          {/* System Switcher Button to TrendPOS (Unified Direct Sales App) */}
           <div className="p-3 bg-slate-50 dark:bg-slate-950/60 border-b border-slate-100 dark:border-slate-800">
             <Button
               variant="outline"
               size="sm"
-              onClick={() => { 
-                const salesUrl = process.env.NEXT_PUBLIC_SALES_SYSTEM_URL || 'http://localhost:9005';
-                window.location.href = salesUrl; 
-              }}
-              className="w-full h-10 justify-between bg-slate-900 border-slate-700 text-teal-400 hover:text-white hover:bg-slate-800 rounded-xl text-xs font-bold shadow-xs"
+              onClick={() => router.push('/admin/instant-sales')}
+              className="w-full h-10 justify-between bg-slate-900 border-slate-700 text-teal-400 hover:text-white hover:bg-slate-800 rounded-xl text-xs font-bold shadow-xs cursor-pointer"
             >
               <span className="flex items-center gap-1.5">
                 <Zap className="w-3.5 h-3.5 text-amber-400" />
