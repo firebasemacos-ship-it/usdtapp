@@ -100,7 +100,7 @@ const AddOrderForm = () => {
                     if (existingOrder) {
                         setOrderData(existingOrder);
                         setSelectedUserId(existingOrder.userId);
-                        setCustomerName(existingOrder.customerName);
+                        setCustomerName(existingOrder.customerName || existingOrder.userName || '');
                         setCustomerPhone(existingOrder.customerPhone || '');
                         setCustomerAddress(existingOrder.customerAddress || '');
                         setPurchasePriceUSD(existingOrder.purchasePriceUSD || 0);
@@ -115,14 +115,14 @@ const AddOrderForm = () => {
                         setDownPaymentLYD(existingOrder.downPaymentLYD || 0);
                         setWeightKG(existingOrder.weightKG || 0);
                         setCustomerWeightCost(existingOrder.customerWeightCost || settings.pricePerKiloLYD || 0);
-                        setCustomerWeightCostCurrency(existingOrder.customerWeightCostCurrency || 'LYD');
+                        setCustomerWeightCostCurrency((existingOrder.customerWeightCostCurrency as 'LYD' | 'USD') || 'LYD');
                         setAddedCost(existingOrder.addedCostUSD || 0);
                         setAddedCostNotes(existingOrder.addedCostNotes || '');
-                        setTrackingId(existingOrder.trackingId);
-                        setInvoiceNumber(existingOrder.invoiceNumber);
+                        setTrackingId(existingOrder.trackingId || '');
+                        setInvoiceNumber(existingOrder.invoiceNumber || existingOrder.orderNumber || '');
 
                         setPricePerKilo(existingOrder.pricePerKilo || settings.pricePerKiloUSD || 0);
-                        setPricePerKiloCurrency(existingOrder.pricePerKiloCurrency || 'USD');
+                        setPricePerKiloCurrency((existingOrder.pricePerKiloCurrency as 'LYD' | 'USD') || 'USD');
 
                         const storeValue = onlineStores.find(s => s.value === existingOrder.store) ? existingOrder.store : 'other';
                         setSelectedStore(storeValue || '');
@@ -134,7 +134,7 @@ const AddOrderForm = () => {
                         if (existingOrder.deliveryDate) setDeliveryDate(new Date(existingOrder.deliveryDate));
                         setPaymentMethod(existingOrder.paymentMethod || 'cash');
                         setStatus(existingOrder.status);
-                        setProductLinks(existingOrder.productLinks);
+                        setProductLinks(Array.isArray(existingOrder.productLinks) ? existingOrder.productLinks.join('\n') : (existingOrder.productLinks || ''));
                         setItemDescription(existingOrder.itemDescription || '');
                     } else {
                         toast({ title: "خطأ", description: "لم يتم العثور على الطلب.", variant: "destructive" });
@@ -165,8 +165,8 @@ const AddOrderForm = () => {
         const selectedUser = users.find(u => u.id === userId);
         if (selectedUser) {
             setSelectedUserId(userId);
-            setCustomerName(selectedUser.name);
-            setCustomerPhone(selectedUser.phone);
+            setCustomerName(selectedUser.name || '');
+            setCustomerPhone(selectedUser.phone || '');
             setCustomerAddress(selectedUser.address || '');
         }
         setIsUserSearchOpen(false);
@@ -174,16 +174,18 @@ const AddOrderForm = () => {
 
     const handleImportTempOrder = (tempOrder: TempOrder) => {
         setImportedTempOrderId(tempOrder.id);
-        const totalPurchaseUSD = tempOrder.subOrders.reduce((sum, so) => sum + so.purchasePriceUSD, 0);
-        const totalSellingLYD = tempOrder.totalAmount;
+        const subOrdersList = tempOrder.subOrders || tempOrder.items || [];
+        const totalPurchaseUSD = subOrdersList.reduce((sum, so) => sum + (so.purchasePriceUSD || so.priceUSD || 0), 0);
+        const totalSellingLYD = tempOrder.totalAmount || tempOrder.totalLYD || 0;
 
-        const totalPaidAmount = tempOrder.totalAmount - tempOrder.remainingAmount;
+        const remainingAmt = tempOrder.remainingAmount || 0;
+        const totalPaidAmount = totalSellingLYD - remainingAmt;
 
-        const totalWeightKG = tempOrder.subOrders.reduce((sum, so) => sum + so.weightKG, 0);
-        const allLinks = tempOrder.subOrders.map(so => so.productLinks).filter(Boolean).join('\\n');
-        const customerNames = tempOrder.subOrders.map(so => so.customerName).join(', ');
+        const totalWeightKG = subOrdersList.reduce((sum, so) => sum + (so.weightKG || 0), 0);
+        const allLinks = subOrdersList.map(so => so.productLinks).filter(Boolean).join('\n');
+        const customerNames = subOrdersList.map(so => so.customerName).filter(Boolean).join(', ');
         const description = `فاتورة مجمعة للعملاء: ${customerNames}`;
-        const firstStore = tempOrder.subOrders.length > 0 ? tempOrder.subOrders[0].selectedStore : '';
+        const firstStore = subOrdersList.length > 0 ? (subOrdersList[0].selectedStore || '') : '';
 
         // If in edit mode, merge data. Otherwise, set it.
         if (orderId) {
@@ -197,7 +199,7 @@ const AddOrderForm = () => {
             if (tempOrder.assignedUserId) {
                 handleUserSelect(tempOrder.assignedUserId);
             } else {
-                setCustomerName(tempOrder.invoiceName);
+                setCustomerName(tempOrder.invoiceName || tempOrder.customerName || '');
                 setCustomerPhone('');
                 setCustomerAddress('');
             }
@@ -210,8 +212,8 @@ const AddOrderForm = () => {
 
             const storeValue = onlineStores.find(s => s.value === firstStore) ? firstStore : 'other';
             setSelectedStore(storeValue);
-            if (storeValue === 'other' && tempOrder.subOrders.length > 0) {
-                setManualStoreName(tempOrder.subOrders[0].manualStoreName);
+            if (storeValue === 'other' && subOrdersList.length > 0) {
+                setManualStoreName(subOrdersList[0].manualStoreName || '');
             }
         }
 
@@ -428,7 +430,7 @@ const AddOrderForm = () => {
                                             >
                                                 <span className="font-bold">{tOrder.invoiceName}</span>
                                                 <span className="text-xs text-muted-foreground">
-                                                    الإجمالي: {tOrder.totalAmount.toFixed(2)} د.ل | العملاء: {tOrder.subOrders.length}
+                                                    الإجمالي: {(tOrder.totalAmount || tOrder.totalLYD || 0).toFixed(2)} د.ل | العملاء: {(tOrder.subOrders || tOrder.items || []).length}
                                                 </span>
                                             </Button>
                                         ))}

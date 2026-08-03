@@ -141,13 +141,13 @@ const FinancialReportsPage = () => {
             searchedTransactions = dateFilteredTransactions.filter(t => {
                 const order = regularOrders.find(o => o.id === t.orderId);
                 return (
-                    t.customerName.toLowerCase().includes(query) ||
-                    t.customerId.toLowerCase().includes(query) ||
+                    (t.customerName || '').toLowerCase().includes(query) ||
+                    (t.customerId || '').toLowerCase().includes(query) ||
                     (order && (
-                        order.invoiceNumber.toLowerCase().includes(query) ||
-                        order.customerPhone?.toLowerCase().includes(query)
+                        (order.invoiceNumber || order.orderNumber || '').toLowerCase().includes(query) ||
+                        (order.customerPhone || order.userPhone || '').toLowerCase().includes(query)
                     )) ||
-                    t.description.toLowerCase().includes(query)
+                    (t.description || '').toLowerCase().includes(query)
                 );
             });
         }
@@ -155,8 +155,8 @@ const FinancialReportsPage = () => {
         let sortedTransactions = [...searchedTransactions];
         if (sortConfig !== null) {
             sortedTransactions.sort((a, b) => {
-                const aValue = a[sortConfig.key];
-                const bValue = b[sortConfig.key];
+                const aValue = a[sortConfig.key] ?? '';
+                const bValue = b[sortConfig.key] ?? '';
                 if (aValue < bValue) return sortConfig.direction === 'ascending' ? -1 : 1;
                 if (aValue > bValue) return sortConfig.direction === 'ascending' ? 1 : -1;
                 return 0;

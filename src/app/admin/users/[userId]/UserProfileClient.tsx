@@ -95,14 +95,14 @@ export const UserProfileClient = ({
                             <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-purple-600 p-1 shadow-xl shadow-primary/20">
                                 <div className="w-full h-full rounded-full bg-black/5 dark:bg-black/40 backdrop-blur-sm flex items-center justify-center border-2 border-white/20">
                                     <span className="text-4xl font-bold text-white">
-                                        {user.name.charAt(0).toUpperCase()}
+                                        {(user.name || user.username || 'U').charAt(0).toUpperCase()}
                                     </span>
                                 </div>
                             </div>
 
                             <div>
                                 <h2 className="text-3xl font-black text-foreground mb-2 flex items-center gap-3">
-                                    {user.name}
+                                    {user.name || user.username || 'مستخدم'}
                                     <Badge variant="outline" className="text-xs font-normal bg-primary/10 text-primary border-primary/20">
                                         عميل
                                     </Badge>
@@ -110,11 +110,11 @@ export const UserProfileClient = ({
                                 <div className="flex flex-wrap gap-4 text-muted-foreground">
                                     <div className="flex items-center gap-2 bg-black/5 dark:bg-white/5 px-3 py-1 rounded-full text-sm">
                                         <UserIcon className="w-4 h-4" />
-                                        @{user.username}
+                                        @{user.username || ''}
                                     </div>
                                     <div className="flex items-center gap-2 bg-black/5 dark:bg-white/5 px-3 py-1 rounded-full text-sm">
                                         <Phone className="w-4 h-4" />
-                                        <span dir="ltr">{user.phone}</span>
+                                        <span dir="ltr">{user.phone || ''}</span>
                                     </div>
                                     <div className="flex items-center gap-2 bg-black/5 dark:bg-white/5 px-3 py-1 rounded-full text-sm">
                                         <MapPin className="w-4 h-4" />

@@ -96,18 +96,18 @@ const AdminTemporaryUsersPage = () => {
         }
         const query = searchQuery.toLowerCase();
         return orders.filter(order =>
-            order.invoiceName.toLowerCase().includes(query) ||
+            (order.invoiceName || '').toLowerCase().includes(query) ||
             order.id.toLowerCase().includes(query) ||
-            order.subOrders.some(so =>
-                so.customerName.toLowerCase().includes(query) ||
-                so.customerPhone?.toLowerCase().includes(query)
+            (order.subOrders || order.items || []).some(so =>
+                (so.customerName || '').toLowerCase().includes(query) ||
+                (so.customerPhone || '').toLowerCase().includes(query)
             )
         );
     }, [orders, searchQuery]);
 
 
-    const totalDebt = filteredOrders.filter(t => t.status !== 'cancelled').reduce((sum, t) => sum + t.remainingAmount, 0);
-    const totalOrdersValue = filteredOrders.filter(t => t.status !== 'cancelled').reduce((sum, t) => sum + t.totalAmount, 0);
+    const totalDebt = filteredOrders.filter(t => t.status !== 'cancelled').reduce((sum, t) => sum + (t.remainingAmount || 0), 0);
+    const totalOrdersValue = filteredOrders.filter(t => t.status !== 'cancelled').reduce((sum, t) => sum + (t.totalAmount || t.totalLYD || 0), 0);
 
     const summaryCards = [
         { title: 'إجمالي الفواتير', value: `${filteredOrders.filter(o => o.status !== 'cancelled').length}`, icon: <Package className="w-6 h-6" /> },
@@ -185,7 +185,7 @@ const AdminTemporaryUsersPage = () => {
         const orderToUpdate = orders.find(o => o.id === tempOrderId);
         if (!orderToUpdate) return;
 
-        const updatedSubOrders = orderToUpdate.subOrders.map(so => {
+        const updatedSubOrders = (orderToUpdate.subOrders || orderToUpdate.items || []).map(so => {
             if (so.subOrderId === subOrderId) {
                 const newStatus: OrderStatus = rep ? 'out_for_delivery' : 'pending';
                 return { ...so, representativeId: rep?.id || null, representativeName: rep?.name || null, shipmentStatus: newStatus };
@@ -211,7 +211,7 @@ const AdminTemporaryUsersPage = () => {
         const params = new URLSearchParams();
         params.append('invoiceNumber', `${tempOrder.invoiceName} / ${subOrder.customerName}`);
         params.append('operationDate', subOrder.operationDate || new Date().toISOString());
-        params.append('customerName', subOrder.customerName);
+        params.append('customerName', subOrder.customerName || '');
         params.append('customerAddress', subOrder.customerAddress || '');
         params.append('customerPhone', subOrder.customerPhone || '');
         params.append('itemDescription', subOrder.itemDescription || '');
@@ -292,11 +292,11 @@ const AdminTemporaryUsersPage = () => {
                                                 </span>
                                             )}
                                         </TableCell>
-                                        <TableCell>{order.subOrders.map(so => so.customerName + (so.representativeName ? ` (${so.representativeName})` : '')).join(', ')}</TableCell>
-                                        <TableCell>{order.totalAmount.toFixed(2)} د.ل</TableCell>
-                                        <TableCell className={order.remainingAmount > 0 ? 'text-destructive' : ''}>
-                                            {order.remainingAmount.toFixed(2)} د.ل
-                                        </TableCell>
+                                         <TableCell>{(order.subOrders || order.items || []).map(so => (so.customerName || '') + (so.representativeName ? ` (${so.representativeName})` : '')).join(', ')}</TableCell>
+                                         <TableCell>{(order.totalAmount || order.totalLYD || 0).toFixed(2)} د.ل</TableCell>
+                                         <TableCell className={(order.remainingAmount || 0) > 0 ? 'text-destructive' : ''}>
+                                             {(order.remainingAmount || 0).toFixed(2)} د.ل
+                                         </TableCell>
                                         <TableCell>
                                             <Badge variant="outline" className={`font-normal ${statusConfig[order.status as keyof typeof statusConfig]?.className}`}>
                                                 {statusConfig[order.status as keyof typeof statusConfig]?.icon}
@@ -316,7 +316,7 @@ const AdminTemporaryUsersPage = () => {
                                                     <DropdownMenuItem onSelect={() => router.push(`/admin/temporary-users/add?id=${order.id}`)}>
                                                         <Edit className="ml-2 h-4 w-4" /> عرض / تعديل
                                                     </DropdownMenuItem>
-                                                    <DropdownMenuItem onSelect={() => openPaymentDialog(order)} disabled={order.remainingAmount <= 0}>
+                                                    <DropdownMenuItem onSelect={() => openPaymentDialog(order)} disabled={(order.remainingAmount || 0) <= 0}>
                                                         <DollarSign className="ml-2 h-4 w-4" /> دفع جزء
                                                     </DropdownMenuItem>
                                                     <DropdownMenuSub>
@@ -324,18 +324,18 @@ const AdminTemporaryUsersPage = () => {
                                                             <UserPlus className="ml-2 h-4 w-4" /> إسناد لمندوب
                                                         </DropdownMenuSubTrigger>
                                                         <DropdownMenuSubContent>
-                                                            {order.subOrders.map(so => (
+                                                            {(order.subOrders || order.items || []).map(so => (
                                                                 <DropdownMenuSub key={so.subOrderId}>
                                                                     <DropdownMenuSubTrigger>
                                                                         {so.customerName} {so.representativeName && <span className="text-xs text-muted-foreground mr-2">({so.representativeName})</span>}
                                                                     </DropdownMenuSubTrigger>
                                                                     <DropdownMenuSubContent>
-                                                                        <DropdownMenuItem onSelect={() => handleAssignRep(order.id, so.subOrderId, null)}>
+                                                                        <DropdownMenuItem onSelect={() => handleAssignRep(order.id, so.subOrderId || '', null)}>
                                                                             <UserX className="ml-2 h-4 w-4" /> إلغاء الإسناد
                                                                         </DropdownMenuItem>
                                                                         <DropdownMenuSeparator />
                                                                         {representatives.map(rep => (
-                                                                            <DropdownMenuItem key={rep.id} onSelect={() => handleAssignRep(order.id, so.subOrderId, rep)}>
+                                                                            <DropdownMenuItem key={rep.id} onSelect={() => handleAssignRep(order.id, so.subOrderId || '', rep)}>
                                                                                 {rep.name}
                                                                             </DropdownMenuItem>
                                                                         ))}
@@ -349,7 +349,7 @@ const AdminTemporaryUsersPage = () => {
                                                             <Printer className="ml-2 h-4 w-4" /> طباعة بوليصة
                                                         </DropdownMenuSubTrigger>
                                                         <DropdownMenuSubContent>
-                                                            {order.subOrders.map(so => (
+                                                            {(order.subOrders || order.items || []).map(so => (
                                                                 <DropdownMenuItem key={so.subOrderId} onSelect={() => handlePrintSubOrderLabel(order, so)}>
                                                                     {so.customerName}
                                                                 </DropdownMenuItem>
@@ -404,12 +404,12 @@ const AdminTemporaryUsersPage = () => {
                                         <SelectValue placeholder="اختر العميل المراد سداد دينه" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {currentOrder?.subOrders.map(so => (
-                                            <SelectItem key={so.subOrderId} value={so.subOrderId} disabled={so.remainingAmount <= 0}>
+                                        {(currentOrder?.subOrders || currentOrder?.items || []).map(so => (
+                                            <SelectItem key={so.subOrderId} value={so.subOrderId || ''} disabled={(so.remainingAmount || 0) <= 0}>
                                                 <div className="flex justify-between w-full">
                                                     <span>{so.customerName}</span>
                                                     <span className="text-muted-foreground font-mono ml-4">
-                                                        {so.remainingAmount > 0 ? `${so.remainingAmount.toFixed(2)} د.ل` : 'خالص'}
+                                                        {(so.remainingAmount || 0) > 0 ? `${(so.remainingAmount || 0).toFixed(2)} د.ل` : 'خالص'}
                                                     </span>
                                                 </div>
                                             </SelectItem>

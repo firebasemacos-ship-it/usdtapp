@@ -100,8 +100,8 @@ export function RepresentativeDetails({ initialRepresentative, initialOrders, in
     const deliveredOrders = useMemo(() => orders.filter(o => o.status === 'delivered'), [orders]);
 
     const pendingAmount = useMemo(() => {
-        const regularOrdersAmount = pendingOrders.reduce((sum, order) => sum + order.remainingAmount, 0);
-        const tempOrdersAmount = tempSubOrders.reduce((sum, order) => sum + order.remainingAmount, 0);
+        const regularOrdersAmount = pendingOrders.reduce((sum, order) => sum + (order.remainingAmount || 0), 0);
+        const tempOrdersAmount = tempSubOrders.reduce((sum, order) => sum + (order.remainingAmount || 0), 0);
         return regularOrdersAmount + tempOrdersAmount;
     }, [pendingOrders, tempSubOrders]);
     

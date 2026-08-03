@@ -116,17 +116,17 @@ const PrintUserStatementPageContent = () => {
                 <section className="mb-6 border border-gray-300 rounded-lg p-4">
                     <h3 className="text-lg font-bold mb-3">بيانات العميل</h3>
                     <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
-                        <InfoRow icon={<UserIcon className="w-4 h-4" />} label="اسم العميل:" value={user.name} />
-                        <InfoRow icon={<UserIcon className="w-4 h-4" />} label="اسم المستخدم:" value={`@${user.username}`} />
-                        <InfoRow icon={<Phone className="w-4 h-4" />} label="رقم الهاتف:" value={user.phone} />
+                        <InfoRow icon={<UserIcon className="w-4 h-4" />} label="اسم العميل:" value={user.name || user.username || ''} />
+                        <InfoRow icon={<UserIcon className="w-4 h-4" />} label="اسم المستخدم:" value={`@${user.username || ''}`} />
+                        <InfoRow icon={<Phone className="w-4 h-4" />} label="رقم الهاتف:" value={user.phone || ''} />
                         <InfoRow icon={<Home className="w-4 h-4" />} label="العنوان:" value={user.address || 'غير محدد'} />
                     </div>
                 </section>
 
                 <section className="mb-6 grid grid-cols-3 gap-4 text-center">
                     <SummaryBox icon={<ShoppingCart />} title="إجمالي قيمة الطلبات" value={`${totalOrdersValue.toFixed(2)} د.ل`} />
-                    <SummaryBox icon={<CreditCard />} title="الدين الكلي المستحق" value={`${user.debt.toFixed(2)} د.ل`} valueColor="text-red-600" />
-                    <SummaryBox icon={<ListOrdered />} title="عدد الطلبات" value={user.orderCount.toString()} />
+                    <SummaryBox icon={<CreditCard />} title="الدين الكلي المستحق" value={`${(user.debt || 0).toFixed(2)} د.ل`} valueColor="text-red-600" />
+                    <SummaryBox icon={<ListOrdered />} title="عدد الطلبات" value={(user.orderCount || 0).toString()} />
                 </section>
 
                 {deposits.length > 0 && (

@@ -85,7 +85,7 @@ const AdminRepresentativesPage = () => {
   
   const generateNextUsername = () => {
     const maxRepNumber = representatives.reduce((max, rep) => {
-        if(rep.username.startsWith('REP')) {
+        if(rep.username && rep.username.startsWith('REP')) {
             const num = parseInt(rep.username.substring(3));
             if (!isNaN(num) && num > max) {
                 return num;
@@ -243,7 +243,7 @@ const AdminRepresentativesPage = () => {
                   <TableCell>
                       <div className="flex items-center gap-2">
                           <span>********</span>
-                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => copyToClipboard(rep.password)}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => copyToClipboard(rep.password || '')}>
                               <Copy className="h-4 w-4" />
                           </Button>
                       </div>

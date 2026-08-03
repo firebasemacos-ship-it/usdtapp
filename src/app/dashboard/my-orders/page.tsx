@@ -79,7 +79,7 @@ const OrderCard = ({ order, index }: { order: Order; index: number }) => {
                         <div className="flex items-center gap-2">
                             <span className="font-mono text-xs font-bold text-foreground tracking-widest">{order.trackingId}</span>
                             <button
-                                onClick={(e) => copyToClipboard(e, order.trackingId)}
+                                onClick={(e) => copyToClipboard(e, order.trackingId || '')}
                                 className="w-6 h-6 flex items-center justify-center rounded-lg bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600"
                             >
                                 <Copy className="w-3 h-3 text-muted-foreground" />

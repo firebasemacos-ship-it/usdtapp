@@ -144,7 +144,7 @@ const AdminOrdersPage = () => {
 
       // Search filter
       const matchesSearch = (
-        order.customerName.toLowerCase().includes(query) ||
+        (order.customerName || order.userName || '').toLowerCase().includes(query) ||
         (order.trackingId && order.trackingId.toLowerCase().includes(query)) ||
         (order.invoiceNumber && order.invoiceNumber.toLowerCase().includes(query))
       );
@@ -245,7 +245,7 @@ const AdminOrdersPage = () => {
     await addTransaction({
       orderId: currentOrder.id,
       customerId: currentOrder.userId,
-      customerName: currentOrder.customerName,
+      customerName: currentOrder.customerName || currentOrder.userName || '',
       date: new Date().toISOString(),
       type: 'payment',
       status: 'paid',
@@ -559,12 +559,12 @@ const AdminOrdersPage = () => {
                 <TableCell>
                   <div className="flex items-center gap-1">
                     <span className="font-mono text-xs text-muted-foreground">{order.trackingId}</span>
-                    <Button variant="ghost" size="icon" className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => copyToClipboard(order.trackingId, 'كود التتبع')}>
+                    <Button variant="ghost" size="icon" className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => copyToClipboard(order.trackingId || '', 'كود التتبع')}>
                       <Copy className="h-3 w-3" />
                     </Button>
                   </div>
                 </TableCell>
-                <TableCell className="font-medium text-sm">{order.customerName}</TableCell>
+                <TableCell className="font-medium text-sm">{order.customerName || order.userName || 'غير محدد'}</TableCell>
                 <TableCell>{order.representativeName ? <Badge variant="secondary" className="font-normal text-xs">{order.representativeName}</Badge> : <span className="text-muted-foreground text-sm">--</span>}</TableCell>
                 <TableCell className="font-semibold text-sm">{order.sellingPriceLYD.toLocaleString('ar-LY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} د.ل</TableCell>
                 <TableCell className={`font-semibold text-sm ${order.remainingAmount > 0 ? 'text-destructive' : 'text-green-600'}`}>

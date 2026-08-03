@@ -93,7 +93,7 @@ async function OrderDetails({ orderId }: { orderId: string }) {
                         <CardTitle>تفاصيل الشحنة والعميل</CardTitle>
                     </CardHeader>
                     <CardContent className="grid md:grid-cols-2 gap-x-8 gap-y-4">
-                        <InfoRow icon={<User className="w-4 h-4" />} label="اسم العميل:" value={order.customerName} />
+                        <InfoRow icon={<User className="w-4 h-4" />} label="اسم العميل:" value={order.customerName || order.userName || 'غير محدد'} />
                         <InfoRow icon={<Phone className="w-4 h-4" />} label="رقم الهاتف:" value={order.customerPhone || 'N/A'} />
                         <InfoRow icon={<MapPin className="w-4 h-4" />} label="العنوان:" value={order.customerAddress || 'N/A'} />
                         <InfoRow icon={<PackageIcon className="w-4 h-4" />} label="وصف السلعة:" value={order.itemDescription || 'غير محدد'} />

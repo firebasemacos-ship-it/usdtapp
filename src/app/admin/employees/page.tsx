@@ -255,7 +255,7 @@ const AdminManagersPage = () => {
                 <TableCell className="py-4">
                   <div className="space-y-1">
                     <p className="text-xs font-bold text-foreground bg-slate-50 dark:bg-slate-800 py-1 px-2 rounded-md w-fit">{manager.username}</p>
-                    <div className="flex items-center gap-2 group/pass cursor-pointer" onClick={() => copyToClipboard(manager.password)}>
+                    <div className="flex items-center gap-2 group/pass cursor-pointer" onClick={() => copyToClipboard(manager.password || '')}>
                       <p className="text-[10px] font-mono text-muted-foreground">********</p>
                       <Copy className="w-3 h-3 text-muted-foreground opacity-0 group-hover/pass:opacity-100 transition-opacity" />
                     </div>

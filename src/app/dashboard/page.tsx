@@ -193,7 +193,7 @@ const DashboardPage = () => {
               {notifications.length > 0 ? notifications.map(notification => (
                 <DropdownMenuItem key={notification.id} className="flex flex-col items-start gap-1 whitespace-normal">
                   <p className="text-sm font-medium">{notification.message}</p>
-                  <p className="text-xs text-muted-foreground">{new Date(notification.timestamp).toLocaleString('ar-LY')}</p>
+                  <p className="text-xs text-muted-foreground">{new Date(notification.timestamp || notification.date || 0).toLocaleString('ar-LY')}</p>
                 </DropdownMenuItem>
               )) : (
                 <DropdownMenuItem disabled>لا توجد إشعارات جديدة</DropdownMenuItem>

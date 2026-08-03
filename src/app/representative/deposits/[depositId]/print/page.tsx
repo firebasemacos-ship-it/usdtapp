@@ -89,7 +89,7 @@ const PrintView = () => {
                         <InfoRow label="تاريخ الإيصال" value={format(new Date(deposit.date), 'yyyy/MM/dd', { locale: ar })} />
                         <InfoRow label="استلمنا من السيد/ة" value={deposit.customerName} />
                         <InfoRow label="مبلغ وقدره" value={`${deposit.amount.toFixed(2)} د.ل`} valueClass="font-bold text-lg text-primary" />
-                        <InfoRow label="وذلك عن" value={deposit.description} />
+                        <InfoRow label="وذلك عن" value={deposit.description || deposit.notes || 'عربون شحن'} />
                         <InfoRow label="رقم الهاتف" value={deposit.customerPhone} />
                     </section>
 

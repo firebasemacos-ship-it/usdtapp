@@ -164,7 +164,7 @@ const OrderDetailsContent = () => {
                         <p className="font-mono font-bold text-base tracking-widest text-foreground">{order.trackingId}</p>
                     </div>
                     <button
-                        onClick={() => copy(order.trackingId, 'كود التتبع')}
+                        onClick={() => copy(order.trackingId || '', 'كود التتبع')}
                         className="w-9 h-9 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center border border-slate-200 dark:border-slate-700"
                     >
                         <Copy className="w-4 h-4 text-muted-foreground" />

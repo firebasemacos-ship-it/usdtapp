@@ -171,11 +171,11 @@ const RepresentativeDashboardPage = () => {
     const fullPendingList: ((Order & { type: 'regular' }) | (TempDisplayOrder & { type: 'temp' }))[] = useMemo(() => {
         const regularPending = pendingOrders.map(o => ({ ...o, type: 'regular' as const }));
         const tempPending = allTempSubOrders.map(so => ({
-            id: so.subOrderId,
-            customerName: so.customerName,
+            id: so.subOrderId || '',
+            customerName: so.customerName || '',
             customerPhone: so.customerPhone || '',
             customerAddress: so.customerAddress || '',
-            remainingAmount: so.remainingAmount,
+            remainingAmount: so.remainingAmount || 0,
             invoiceNumber: so.invoiceName || 'فاتورة مجمعة',
             type: 'temp' as const
         }));
@@ -186,8 +186,8 @@ const RepresentativeDashboardPage = () => {
         const deliveredLogs = deliveredOrders.map(o => ({
             id: o.id,
             type: 'delivered',
-            description: `طلب #${o.invoiceNumber}`,
-            customerName: o.customerName,
+            description: `طلب #${o.invoiceNumber || o.orderNumber}`,
+            customerName: o.customerName || o.userName || 'عميل',
             amount: o.collectedAmount || 0,
             date: o.deliveryDate ? new Date(o.deliveryDate) : new Date(0)
         }));
@@ -195,8 +195,8 @@ const RepresentativeDashboardPage = () => {
         const depositLogs = collectedDeposits.map(d => ({
             id: d.id,
             type: 'deposit',
-            description: `إيصال #${d.receiptNumber}`,
-            customerName: d.customerName,
+            description: `إيصال #${d.receiptNumber || d.id}`,
+            customerName: d.customerName || 'عميل',
             amount: d.amount,
             date: d.collectedDate ? new Date(d.collectedDate) : new Date(0)
         }));
@@ -296,18 +296,18 @@ const RepresentativeDashboardPage = () => {
         }
         const query = searchQuery.toLowerCase();
         const foundOrders = allOrders.filter(o =>
-            o.customerName.toLowerCase().includes(query) ||
-            o.customerPhone?.toLowerCase().includes(query) ||
-            o.invoiceNumber.toLowerCase().includes(query)
+            (o.customerName || o.userName || '').toLowerCase().includes(query) ||
+            (o.customerPhone || o.userPhone || '').toLowerCase().includes(query) ||
+            (o.invoiceNumber || o.orderNumber || '').toLowerCase().includes(query)
         );
         const foundTempSubOrders = allTempSubOrders.filter(so =>
-            so.customerName.toLowerCase().includes(query) ||
-            so.customerPhone?.toLowerCase().includes(query)
+            (so.customerName || '').toLowerCase().includes(query) ||
+            (so.customerPhone || '').toLowerCase().includes(query)
         );
         const foundDeposits = allDeposits.filter(d =>
-            d.customerName.toLowerCase().includes(query) ||
-            d.customerPhone.toLowerCase().includes(query) ||
-            d.receiptNumber.toLowerCase().includes(query)
+            (d.customerName || '').toLowerCase().includes(query) ||
+            (d.customerPhone || '').toLowerCase().includes(query) ||
+            (d.receiptNumber || d.id || '').toLowerCase().includes(query)
         );
         setSearchResults({ orders: foundOrders, deposits: foundDeposits, tempSubOrders: foundTempSubOrders });
     };
@@ -704,9 +704,9 @@ const DepositCard = ({ deposit, onStatusUpdate, onPrint, copyToClipboard }: { de
             <div className="flex justify-between items-center">
                 <CardTitle>{deposit.customerName}</CardTitle>
                 <div className="flex items-center">
-                    <Badge variant="outline" className={`font-normal ${depositStatusConfig[deposit.status].className}`}>
-                        {depositStatusConfig[deposit.status].icon}
-                        <span className="mr-1">{depositStatusConfig[deposit.status].text}</span>
+                    <Badge variant="outline" className={`font-normal ${depositStatusConfig[deposit.status || 'pending'].className}`}>
+                        {depositStatusConfig[deposit.status || 'pending'].icon}
+                        <span className="mr-1">{depositStatusConfig[deposit.status || 'pending'].text}</span>
                     </Badge>
                     <Button variant="ghost" size="icon" onClick={() => onPrint(deposit.id)}>
                         <Printer className="w-5 h-5" />
@@ -748,25 +748,25 @@ const SearchResults = ({ results, onPrintOrder, onPrintDeposit }: { results: { o
         results.orders.forEach(o => {
             const phone = o.customerPhone || 'N/A';
             if (!info.has(phone)) {
-                info.set(phone, { name: o.customerName, phone, totalDue: 0 });
+                info.set(phone, { name: o.customerName || 'عميل', phone, totalDue: 0 });
             }
             if (o.status !== 'delivered' && o.status !== 'cancelled') {
-                info.get(phone)!.totalDue += o.remainingAmount;
+                info.get(phone)!.totalDue += (o.remainingAmount || 0);
             }
         });
 
         results.tempSubOrders.forEach(so => {
             const phone = so.customerPhone || 'N/A';
             if (!info.has(phone)) {
-                info.set(phone, { name: so.customerName, phone, totalDue: 0 });
+                info.set(phone, { name: so.customerName || 'عميل', phone, totalDue: 0 });
             }
-            info.get(phone)!.totalDue += so.remainingAmount;
+            info.get(phone)!.totalDue += (so.remainingAmount || 0);
         });
 
         results.deposits.forEach(d => {
             const phone = d.customerPhone || 'N/A';
             if (!info.has(phone)) {
-                info.set(phone, { name: d.customerName, phone, totalDue: 0 });
+                info.set(phone, { name: d.customerName || 'عميل', phone, totalDue: 0 });
             }
         });
 
@@ -809,7 +809,7 @@ const SearchResults = ({ results, onPrintOrder, onPrintDeposit }: { results: { o
                                         <p className="text-sm text-muted-foreground">{so.invoiceName}</p>
                                     </div>
                                     <div className="text-left">
-                                        <p className="font-bold text-destructive">{so.remainingAmount.toFixed(2)} د.ل</p>
+                                        <p className="font-bold text-destructive">{(so.remainingAmount || 0).toFixed(2)} د.ل</p>
                                     </div>
                                 </div>
                             </CardContent>

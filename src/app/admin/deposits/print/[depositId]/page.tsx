@@ -68,7 +68,7 @@ const PrintView = () => {
                         </div>
                         <div className="text-left">
                             <h2 className="text-2xl font-bold text-gray-700">إيصال استلام عربون</h2>
-                            <p className="font-mono text-sm">#{deposit.receiptNumber}</p>
+                            <p className="font-mono text-sm">#{deposit.receiptNumber || deposit.id}</p>
                         </div>
                     </header>
 
@@ -76,7 +76,7 @@ const PrintView = () => {
                         <InfoRow label="تاريخ الإيصال" value={format(new Date(deposit.date), 'yyyy/MM/dd', { locale: ar })} />
                         <InfoRow label="استلمنا من السيد/ة" value={deposit.customerName} />
                         <InfoRow label="مبلغ وقدره" value={`${deposit.amount.toFixed(2)} د.ل`} valueClass="font-bold text-lg text-primary" />
-                        <InfoRow label="وذلك عن" value={deposit.description} />
+                        <InfoRow label="وذلك عن" value={deposit.description || deposit.notes || 'عربون شحن'} />
                         <InfoRow label="رقم الهاتف" value={deposit.customerPhone} />
                     </section>
 

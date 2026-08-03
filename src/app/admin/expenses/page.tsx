@@ -96,7 +96,7 @@ const AdminExpensesPage = () => {
     if (!searchQuery) return dateFilteredExpenses;
 
     return dateFilteredExpenses.filter(expense =>
-      expense.description.toLowerCase().includes(searchQuery.toLowerCase())
+      (expense.description || expense.title || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [expenses, searchQuery, filterType, dateRange]);
 

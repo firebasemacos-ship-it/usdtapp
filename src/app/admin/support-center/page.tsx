@@ -37,11 +37,11 @@ const NewConversationDialog = ({ onSelectUser, existingUserIds }: { onSelectUser
     }, [isDialogOpen, existingUserIds]);
     
     const filteredUsers = allUsers.filter(user => 
-        user.name.toLowerCase().includes(searchQuery.toLowerCase())
+        (user.name || user.username || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const handleSelect = (user: {id: string, name: string}) => {
-        onSelectUser(user);
+    const handleSelect = (user: {id: string, name?: string}) => {
+        onSelectUser({ id: user.id, name: user.name || '' });
         setIsDialogOpen(false);
     }
 
@@ -68,7 +68,7 @@ const NewConversationDialog = ({ onSelectUser, existingUserIds }: { onSelectUser
                     />
                     <div className="mt-4 max-h-60 overflow-y-auto">
                         {filteredUsers.length > 0 ? filteredUsers.map(user => (
-                            <div key={user.id} onClick={() => handleSelect(user)}
+                            <div key={user.id} onClick={() => handleSelect({ id: user.id, name: user.name || user.username })}
                                 className="p-2 hover:bg-secondary rounded-md cursor-pointer">
                                 {user.name} ({user.username})
                             </div>
@@ -99,7 +99,7 @@ const AdminSupportCenterPage = () => {
     const fetchConversations = async () => {
         // No loading state change here to avoid flicker on re-fetch
         const convos = await getConversations();
-        setConversations(convos.sort((a,b) => new Date(b.lastMessageTime).getTime() - new Date(a.lastMessageTime).getTime()));
+        setConversations(convos.sort((a,b) => new Date(b.lastMessageTime || b.updatedAt || 0).getTime() - new Date(a.lastMessageTime || a.updatedAt || 0).getTime()));
     }
 
     useEffect(() => {
@@ -127,7 +127,7 @@ const AdminSupportCenterPage = () => {
 
     const handleSelectConversation = (conversation: Conversation) => {
         setSelectedConversation(conversation);
-        if (conversation.unreadCount > 0) {
+        if (conversation.unreadCount && conversation.unreadCount > 0) {
             const updatedConversations = conversations.map(c => 
                 c.id === conversation.id ? { ...c, unreadCount: 0 } : c
             );
@@ -186,7 +186,7 @@ const AdminSupportCenterPage = () => {
     };
     
     const filteredConversations = conversations.filter(conv => 
-        conv.userName.toLowerCase().includes(searchQuery.toLowerCase())
+        (conv.userName || '').toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const existingUserIds = conversations.map(c => c.userId);
@@ -218,18 +218,18 @@ const AdminSupportCenterPage = () => {
                                     onClick={() => handleSelectConversation(conv)}>
                                 <Avatar className="h-12 w-12 ml-4">
                                     <AvatarImage src={logo.src} alt="System Logo" />
-                                    <AvatarFallback>{conv.userName.charAt(0)}</AvatarFallback>
+                                    <AvatarFallback>{(conv.userName || 'م').charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-grow overflow-hidden">
-                                    <h3 className="font-semibold truncate">{conv.userName}</h3>
+                                    <h3 className="font-semibold truncate">{conv.userName || 'مستخدم'}</h3>
                                     <p className="text-sm text-muted-foreground truncate">{conv.lastMessage}</p>
                                 </div>
                                 <div className="flex flex-col items-end text-xs text-muted-foreground ml-2">
                                      <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive hover:bg-destructive/10" onClick={(e) => openDeleteDialog(e, conv)}>
                                         <Trash2 className="w-4 h-4"/>
                                     </Button>
-                                    <span>{new Date(conv.lastMessageTime).toLocaleTimeString('ar-LY', {hour: '2-digit', minute: '2-digit'})}</span>
-                                    {conv.unreadCount > 0 && <Badge className="mt-1">{conv.unreadCount}</Badge>}
+                                     <span>{new Date(conv.lastMessageTime || conv.updatedAt || 0).toLocaleTimeString('ar-LY', {hour: '2-digit', minute: '2-digit'})}</span>
+                                     {(conv.unreadCount || 0) > 0 && <Badge className="mt-1">{conv.unreadCount}</Badge>}
                                 </div>
                             </div>
                         ))}
@@ -246,12 +246,12 @@ const AdminSupportCenterPage = () => {
                                     </Button>
                                     <Avatar>
                                         <AvatarImage src={logo.src} alt="System Logo" />
-                                        <AvatarFallback>{selectedConversation.userName.charAt(0)}</AvatarFallback>
+                                        <AvatarFallback>{(selectedConversation.userName || 'م').charAt(0)}</AvatarFallback>
                                     </Avatar>
-                                    <h2 className="font-semibold text-lg">{selectedConversation.userName}</h2>
+                                    <h2 className="font-semibold text-lg">{selectedConversation.userName || 'مستخدم'}</h2>
                                 </header>
                                 <main className="flex-grow p-4 overflow-y-auto space-y-4">
-                                    {selectedConversation.messages.map(msg => (
+                                    {(selectedConversation.messages || []).map(msg => (
                                         <div key={msg.id} className={`flex ${msg.sender === 'support' ? 'justify-end' : 'justify-start'}`}>
                                             <div className={`max-w-xs md:max-w-md lg:max-w-lg p-3 rounded-2xl ${
                                                 msg.sender === 'support' 

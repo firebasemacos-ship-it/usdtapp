@@ -48,14 +48,14 @@ const SupportChatPage = () => {
             let userConvo = allConvos.find(c => c.userId === userId);
 
             if (!userConvo) {
-                const newConvoId = await startConversation(userId, currentUser.name, `https://i.pravatar.cc/150?u=${userId}`);
+                const newConvoId = await startConversation(userId, currentUser.name || currentUser.username || 'مستخدم', `https://i.pravatar.cc/150?u=${userId}`);
                 const convosAfterCreation = await getConversations();
                 userConvo = convosAfterCreation.find(c => c.id === newConvoId);
             }
 
             if (userConvo) {
                 setConversation(userConvo);
-                setMessages(userConvo.messages);
+                setMessages(userConvo.messages || []);
             }
             setIsLoading(false);
         };

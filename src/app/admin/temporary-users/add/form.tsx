@@ -90,8 +90,8 @@ const AddTemporaryBatchForm = () => {
             if (orderId) {
                 const existingOrder = await getTempOrderById(orderId);
                 if (existingOrder) {
-                    setInvoiceName(existingOrder.invoiceName);
-                    setSubOrders(existingOrder.subOrders);
+                    setInvoiceName(existingOrder.invoiceName || '');
+                    setSubOrders(existingOrder.subOrders || existingOrder.items || []);
                     setAssignedUserId(existingOrder.assignedUserId || null);
                     setInvoiceNumber(existingOrder.id.slice(-6));
                 } else {
@@ -108,11 +108,13 @@ const AddTemporaryBatchForm = () => {
         setSubOrders([...subOrders, createNewSubOrder()]);
     };
 
-    const handleRemoveSubOrder = (id: string) => {
+    const handleRemoveSubOrder = (id?: string) => {
+        if (!id) return;
         setSubOrders(subOrders.filter(order => order.subOrderId !== id));
     };
 
-    const handleSubOrderChange = (id: string, field: keyof SubOrder, value: any) => {
+    const handleSubOrderChange = (id: string | undefined, field: keyof SubOrder, value: any) => {
+        if (!id) return;
         setSubOrders(subOrders.map(order => {
             if (order.subOrderId === id) {
                 const updatedOrder = { ...order, [field]: value };
@@ -123,7 +125,7 @@ const AddTemporaryBatchForm = () => {
                 }
 
                 if (field === 'sellingPriceLYD' || field === 'downPaymentLYD') {
-                    updatedOrder.remainingAmount = updatedOrder.sellingPriceLYD - updatedOrder.downPaymentLYD;
+                    updatedOrder.remainingAmount = (updatedOrder.sellingPriceLYD || 0) - (updatedOrder.downPaymentLYD || 0);
                 }
                  if(field === 'representativeId') {
                     const rep = representatives.find(r => r.id === value);
@@ -148,20 +150,24 @@ const AddTemporaryBatchForm = () => {
 
     const calculatedTotals = useMemo(() => {
         return subOrders.map(order => {
-            const shippingCostLYD = (order.weightKG * order.pricePerKiloUSD) * EXCHANGE_RATE;
-            const purchaseCostLYD = order.purchasePriceUSD * EXCHANGE_RATE;
-            const netProfit = order.sellingPriceLYD - purchaseCostLYD - shippingCostLYD;
+            const weightKG = order.weightKG || 0;
+            const pricePerKiloUSD = order.pricePerKiloUSD || 0;
+            const purchasePriceUSD = order.purchasePriceUSD || 0;
+            const sellingPriceLYD = order.sellingPriceLYD || 0;
+            const shippingCostLYD = (weightKG * pricePerKiloUSD) * EXCHANGE_RATE;
+            const purchaseCostLYD = purchasePriceUSD * EXCHANGE_RATE;
+            const netProfit = sellingPriceLYD - purchaseCostLYD - shippingCostLYD;
             return {
                 shippingCostLYD,
                 purchaseCostLYD,
-                remainingAmount: order.remainingAmount,
+                remainingAmount: order.remainingAmount || 0,
                 netProfit
             };
         });
     }, [subOrders]);
 
     const grandTotal = useMemo(() => {
-        return subOrders.reduce((acc, order) => acc + order.sellingPriceLYD, 0);
+        return subOrders.reduce((acc, order) => acc + (order.sellingPriceLYD || 0), 0);
     }, [subOrders]);
 
      const grandTotalProfit = useMemo(() => {
@@ -169,7 +175,7 @@ const AddTemporaryBatchForm = () => {
     }, [calculatedTotals]);
 
     const totalRemaining = useMemo(() => {
-        return subOrders.reduce((acc, order) => acc + order.remainingAmount, 0);
+        return subOrders.reduce((acc, order) => acc + (order.remainingAmount || 0), 0);
     }, [subOrders]);
 
 
@@ -320,7 +326,7 @@ const AddTemporaryBatchForm = () => {
                             <div className="flex justify-between items-center">
                                 <CardTitle>الطلب الفرعي للعميل: {order.customerName || `طلب #${index + 1}`}</CardTitle>
                                 {subOrders.length > 1 && (
-                                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleRemoveSubOrder(order.subOrderId)}>
+                                    <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleRemoveSubOrder(order.subOrderId || '')}>
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
                                 )}
@@ -347,7 +353,7 @@ const AddTemporaryBatchForm = () => {
                                     <FormField label="اسم المستخدم (رقم الهاتف)" id={`username-${order.subOrderId}`}>
                                         <div className="flex items-center">
                                             <Input value={order.username} readOnly className="bg-muted/50"/>
-                                            <Button variant="ghost" size="icon" onClick={() => copyToClipboard(order.username, 'اسم المستخدم')}><Copy className="w-4 h-4"/></Button>
+                                            <Button variant="ghost" size="icon" onClick={() => copyToClipboard(order.username || '', 'اسم المستخدم')}><Copy className="w-4 h-4"/></Button>
                                         </div>
                                     </FormField>
                                     <FormField label="كلمة المرور" id={`password-${order.subOrderId}`}>

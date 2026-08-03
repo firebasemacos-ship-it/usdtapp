@@ -109,9 +109,9 @@ const AdminDepositsPage = () => {
         return dateFilteredDeposits.filter(deposit => {
             const query = searchQuery.toLowerCase();
             return (
-                deposit.customerName.toLowerCase().includes(query) ||
-                deposit.customerPhone.toLowerCase().includes(query) ||
-                deposit.receiptNumber.toLowerCase().includes(query)
+                (deposit.customerName || '').toLowerCase().includes(query) ||
+                (deposit.customerPhone || '').toLowerCase().includes(query) ||
+                (deposit.receiptNumber || '').toLowerCase().includes(query)
             );
         });
     }, [allDeposits, searchQuery, filterType, dateRange]);
@@ -363,10 +363,15 @@ const AdminDepositsPage = () => {
                                     <p className="font-black text-sm text-foreground">{deposit.amount.toLocaleString('ar-LY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-[10px] font-normal opacity-60">د.ل</span></p>
                                 </TableCell>
                                 <TableCell className="py-4 text-center">
-                                    <span className={`inline-flex items-center gap-1.5 text-[10px] font-black px-3 py-1.5 rounded-full border ${statusConfig[deposit.status].className}`}>
-                                        {statusConfig[deposit.status].icon}
-                                        {statusConfig[deposit.status].text}
-                                    </span>
+                                    {(() => {
+                                        const st = statusConfig[deposit.status || 'pending'] || statusConfig.pending;
+                                        return (
+                                            <span className={`inline-flex items-center gap-1.5 text-[10px] font-black px-3 py-1.5 rounded-full border ${st.className}`}>
+                                                {st.icon}
+                                                {st.text}
+                                            </span>
+                                        );
+                                    })()}
                                 </TableCell>
                                 <TableCell className="py-4">
                                     <div className="flex items-center gap-2">

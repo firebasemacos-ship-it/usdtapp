@@ -148,10 +148,10 @@ const MyDataPage = () => {
                 {/* Account Info */}
                 <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm px-4 py-1">
                     <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide pt-4 pb-1">معلومات الحساب</p>
-                    <InfoItem icon={UserIcon} label="اسم المستخدم" value={user.username} />
-                    <InfoItem icon={Phone} label="رقم الهاتف" value={user.phone} />
+                    <InfoItem icon={UserIcon} label="اسم المستخدم" value={user.username || ''} />
+                    <InfoItem icon={Phone} label="رقم الهاتف" value={user.phone || ''} />
                     <InfoItem icon={Calendar} label="آخر عملية" value={lastOrderDate} />
-                    <InfoItem icon={Hash} label="عدد الطلبات" value={user.orderCount.toString()} />
+                    <InfoItem icon={Hash} label="عدد الطلبات" value={(user.orderCount || 0).toString()} />
                 </div>
 
                 {/* Financial Info */}

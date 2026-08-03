@@ -362,8 +362,8 @@ const AdminUsersPage = () => {
                   </div>
                 </TableCell>
                 <TableCell className="font-semibold text-sm">{user.orderCount}</TableCell>
-                <TableCell className={`font-bold text-sm ${user.debt > 0 ? 'text-destructive' : 'text-green-600'}`}>
-                  {user.debt.toLocaleString('ar-LY', { maximumFractionDigits: 0 })} د.ل
+                <TableCell className={`font-bold text-sm ${(user.debt || 0) > 0 ? 'text-destructive' : 'text-green-600'}`}>
+                  {(user.debt || 0).toLocaleString('ar-LY', { maximumFractionDigits: 0 })} د.ل
                 </TableCell>
                 <TableCell>
                   <DropdownMenu>

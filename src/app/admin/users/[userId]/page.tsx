@@ -21,8 +21,8 @@ const UserProfilePage = async ({ params }: { params: { userId: string } }) => {
     ]);
 
     const totalOrdersValue = orders.filter(o => o.status !== 'cancelled').reduce((sum, o) => sum + o.sellingPriceLYD, 0);
-    const totalDebt = user.debt;
-    const totalOrdersCount = user.orderCount;
+    const totalDebt = user.debt || 0;
+    const totalOrdersCount = user.orderCount || 0;
 
     return (
         <UserProfileClient
