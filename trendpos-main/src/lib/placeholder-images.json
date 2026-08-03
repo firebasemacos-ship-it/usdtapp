@@ -1,0 +1,82 @@
+{
+  "placeholderImages": [
+    {
+      "id": "bruschetta",
+      "description": "Crispy bruschetta with fresh tomatoes, garlic, and basil.",
+      "imageUrl": "https://picsum.photos/seed/bruschetta/400/300",
+      "imageHint": "bruschetta tomato"
+    },
+    {
+      "id": "calamari",
+      "description": "Golden fried calamari served with a side of marinara sauce.",
+      "imageUrl": "https://picsum.photos/seed/calamari/400/300",
+      "imageHint": "fried calamari"
+    },
+    {
+      "id": "spinach-dip",
+      "description": "Creamy spinach and artichoke dip with tortilla chips.",
+      "imageUrl": "https://picsum.photos/seed/spinach-dip/400/300",
+      "imageHint": "spinach dip"
+    },
+    {
+      "id": "spaghetti-carbonara",
+      "description": "Classic spaghetti carbonara with pancetta, egg, and parmesan.",
+      "imageUrl": "https://picsum.photos/seed/carbonara/400/300",
+      "imageHint": "spaghetti carbonara"
+    },
+    {
+      "id": "margherita-pizza",
+      "description": "Margherita pizza with fresh mozzarella, tomatoes, and basil.",
+      "imageUrl": "https://picsum.photos/seed/margherita/400/300",
+      "imageHint": "margherita pizza"
+    },
+    {
+      "id": "grilled-salmon",
+      "description": "Grilled salmon fillet with a lemon-dill sauce and asparagus.",
+      "imageUrl": "https://picsum.photos/seed/salmon/400/300",
+      "imageHint": "grilled salmon"
+    },
+    {
+      "id": "steak-frites",
+      "description": "Juicy steak frites with a side of garlic butter.",
+      "imageUrl": "https://picsum.photos/seed/steak/400/300",
+      "imageHint": "steak frites"
+    },
+    {
+      "id": "french-fries",
+      "description": "Crispy golden french fries.",
+      "imageUrl": "https://picsum.photos/seed/fries/400/300",
+      "imageHint": "french fries"
+    },
+    {
+      "id": "side-salad",
+      "description": "A fresh garden salad with house vinaigrette.",
+      "imageUrl": "https://picsum.photos/seed/salad/400/300",
+      "imageHint": "side salad"
+    },
+    {
+      "id": "tiramisu",
+      "description": "Classic Italian tiramisu with coffee-soaked ladyfingers.",
+      "imageUrl": "https://picsum.photos/seed/tiramisu/400/300",
+      "imageHint": "tiramisu slice"
+    },
+    {
+      "id": "cheesecake",
+      "description": "New York style cheesecake with a strawberry topping.",
+      "imageUrl": "https://picsum.photos/seed/cheesecake/400/300",
+      "imageHint": "cheesecake slice"
+    },
+    {
+      "id": "coca-cola",
+      "description": "A refreshing can of Coca-Cola.",
+      "imageUrl": "https://picsum.photos/seed/coke/400/300",
+      "imageHint": "soda can"
+    },
+    {
+      "id": "lemonade",
+      "description": "Freshly squeezed lemonade.",
+      "imageUrl": "https://picsum.photos/seed/lemonade/400/300",
+      "imageHint": "glass lemonade"
+    }
+  ]
+}

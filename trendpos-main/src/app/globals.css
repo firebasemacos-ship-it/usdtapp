@@ -1,0 +1,250 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Tajawal', 'Cairo', sans-serif;
+  overflow-x: hidden;
+}
+
+@layer base {
+  :root {
+    --background: 220 33% 98%;
+    --foreground: 224 71% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+    --primary: 180 81% 37%; /* #1aa0a1 USDT STORE Teal */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 30% 92%;
+    --secondary-foreground: 224 71% 4%;
+    --muted: 215 30% 94%;
+    --muted-foreground: 215 16% 45%;
+    --accent: 180 81% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 20% 88%;
+    --input: 220 20% 88%;
+    --ring: 180 81% 37%;
+    --chart-1: 180 81% 37%;
+    --chart-2: 175 80% 40%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 1rem;
+    --sidebar-background: 220 33% 98%;
+    --sidebar-foreground: 224 71% 4%;
+    --sidebar-primary: 180 81% 37%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 180 80% 95%;
+    --sidebar-accent-foreground: 180 81% 37%;
+    --sidebar-border: 220 20% 88%;
+    --sidebar-ring: 180 81% 37%;
+  }
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 210 20% 98%;
+    --card: 224 71% 4%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 180 81% 37%; /* #1aa0a1 USDT STORE Teal */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 28% 15%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 215 28% 15%;
+    --muted-foreground: 217.9 10.6% 65%;
+    --accent: 180 81% 45%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 28% 18%;
+    --input: 215 28% 18%;
+    --ring: 180 81% 37%;
+    --chart-1: 180 81% 37%;
+    --chart-2: 175 80% 40%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 180 75% 45%;
+    --sidebar-background: 224 71% 4%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 180 81% 37%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 28% 15%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 215 28% 18%;
+    --sidebar-ring: 180 81% 37%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground selection:bg-primary/20 selection:text-primary;
+  }
+}
+
+/* Glassmorphism Design Utilities */
+@layer components {
+  .glass-card {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 8px 32px 0 rgba(26, 160, 161, 0.07);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark .glass-card {
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+
+  .glass-card-interactive {
+    @apply glass-card;
+  }
+  .glass-card-interactive:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 38px 0 rgba(26, 160, 161, 0.2);
+    border-color: rgba(26, 160, 161, 0.4);
+  }
+  .dark .glass-card-interactive:hover {
+    box-shadow: 0 14px 38px 0 rgba(26, 160, 161, 0.25);
+    border-color: rgba(26, 160, 161, 0.45);
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(20px) saturate(190%);
+    -webkit-backdrop-filter: blur(20px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+  }
+
+  .dark .glass-panel {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-input {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: all 0.25s ease;
+  }
+  .glass-input:focus {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 3px rgba(26, 160, 161, 0.2);
+  }
+  .dark .glass-input {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .dark .glass-input:focus {
+    background: rgba(30, 41, 59, 0.85);
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 0 3px rgba(26, 160, 161, 0.3);
+  }
+
+  .glass-pill {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.2s ease;
+  }
+  .dark .glass-pill {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-pill-active {
+    background: linear-gradient(135deg, #1aa0a1, #148081);
+    color: white !important;
+    border-color: transparent !important;
+    box-shadow: 0 4px 15px rgba(26, 160, 161, 0.35);
+  }
+
+  .glass-glow-button {
+    background: linear-gradient(135deg, #1aa0a1, #148081);
+    box-shadow: 0 4px 20px rgba(26, 160, 161, 0.3);
+    transition: all 0.3s ease;
+  }
+  .glass-glow-button:hover {
+    box-shadow: 0 6px 25px rgba(26, 160, 161, 0.5);
+    transform: translateY(-1px);
+  }
+
+  .glass-table {
+    @apply glass-panel rounded-2xl overflow-hidden;
+  }
+  .glass-table th {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+  }
+  .dark .glass-table th {
+    background: rgba(15, 23, 42, 0.4);
+  }
+  .glass-table tr:hover {
+    background: rgba(26, 160, 161, 0.04);
+  }
+  .dark .glass-table tr:hover {
+    background: rgba(26, 160, 161, 0.08);
+  }
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 9999px;
+  backdrop-filter: blur(4px);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(26, 160, 161, 0.5);
+}
+
+/* Professional Invoice Print Styles */
+@media print {
+  @page {
+    margin: 5mm;
+    size: auto;
+  }
+  body * {
+    visibility: hidden !important;
+  }
+  .print-only-receipt,
+  .print-only-receipt * {
+    visibility: visible !important;
+  }
+  .print-only-receipt {
+    display: block !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 0 !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 110mm !important;
+    padding: 15px !important;
+    margin: 0 auto !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+    z-index: 999999 !important;
+  }
+}
